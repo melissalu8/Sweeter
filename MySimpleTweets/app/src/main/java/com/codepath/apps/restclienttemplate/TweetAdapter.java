@@ -174,6 +174,8 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                                     notifyDataSetChanged();
                                     tvRetweetCount.setText(tweet.getRetweet_count() + "");
                                     retweeted = tweet.isRetweeted();
+
+                                    ibRetweet.setImageResource(R.drawable.emptyr);
                                 } catch (JSONException e) {
                                     logError("Failed to load update", e, true);
                                 }
@@ -195,6 +197,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                                     tvRetweetCount.setText(tweet.getRetweet_count() + "");
                                     retweeted = tweet.isRetweeted();
                                     //System.out.println("successfully unretweeted");
+                                    ibRetweet.setImageResource(R.drawable.retweet);
                                 } catch (JSONException e) {
                                     logError("Failed to load update", e, true);
                                 }
@@ -226,7 +229,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                                     tvFavCount.setText(tweet.getFavorite_count() + "");
                                     favorited = tweet.isFavorited();
                                     // TODO: Change image color
-                                    // ibHeart.setImageResource(R.drawable.heart);
+                                    ibHeart.setImageResource(R.drawable.filledheart);
                                 } catch (JSONException e) {
                                     logError("Failed to load update", e, true);
                                 }
@@ -250,7 +253,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                                     tvFavCount.setText(tweet.getFavorite_count() + "");
                                     // TODO: Change image color
                                     favorited = tweet.isFavorited();
-//                                 ibHeart.setImageResource(R.drawable.heart);
+                                    ibHeart.setImageResource(R.drawable.heart);
                                 } catch (JSONException e) {
                                     logError("Failed to load update", e, true);
                                 }
