@@ -15,6 +15,8 @@ public class Tweet {
     public int favorite_count;
     public int retweet_count;
     public int reply_count;
+    public boolean favorited;
+    public boolean retweeted;
 
     // deserialize the JSON
     // create a method to take in a JSONObject and give back a Tweet Object
@@ -30,6 +32,10 @@ public class Tweet {
         tweet.favorite_count = jsonObject.getInt("favorite_count");
         tweet.retweet_count = jsonObject.getInt("retweet_count");
 //        tweet.reply_count = jsonObject.getInt("reply_count");
+        tweet.favorited = jsonObject.getBoolean("favorited");
+        tweet.retweeted = jsonObject.getBoolean("retweeted");
+        // booleans for favorite and retweet
+
 
         return tweet;
     }
@@ -50,7 +56,7 @@ public class Tweet {
         return createdAt;
     }
 
-    public Integer getFavorite_count() {
+    public int getFavorite_count() {
         return favorite_count;
     }
 
@@ -60,5 +66,13 @@ public class Tweet {
 
     public int getReply_count() {
         return reply_count;
+    }
+
+    public boolean isFavorited() {
+        return favorited;
+    }
+
+    public boolean isRetweeted() {
+        return retweeted;
     }
 }

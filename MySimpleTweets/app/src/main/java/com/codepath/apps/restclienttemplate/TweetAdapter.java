@@ -33,6 +33,8 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
     private List<Tweet> mTweets;
     Context context;
     TwitterClient client;
+    boolean favorited;
+    boolean retweeted;
 
     // pass in the Tweets array in the constructor
     public TweetAdapter(List<Tweet> tweets) {
@@ -123,6 +125,8 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             tvComCount = (TextView) itemView.findViewById(R.id.tvComCount);
             tvRetweetCount = (TextView) itemView.findViewById(R.id.tvRetweetCount);
 
+
+
             ibComment.setOnClickListener(this);
             ibRetweet.setOnClickListener(this);
             ibHeart.setOnClickListener(this);
@@ -148,32 +152,60 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                     intent.putExtra(Tweet.class.getSimpleName(), Parcels.wrap(tweet));
                     // show the activity
                     ((Activity) context).startActivityForResult(intent, 2);
+                    tvComCount.setText(tweet.getReply_count()+"");
                 }
 
-                // RETWEET
+                // RETWEET and UN-RETWEET
                 else if (view.getId() == R.id.ibRetweet) {
                     client = TwitterApp.getRestClient(context);
 
                     Tweet tweet = mTweets.get(position);
                     long id = tweet.uid;
-                    client.reTweet(id, new JsonHttpResponseHandler() {
-                        @Override
-                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                            super.onSuccess(statusCode, headers, response);
-                            try {
-                                Tweet tweet = Tweet.fromJSON(response);
-                                mTweets.add(tweet);
-                                notifyDataSetChanged();
-                            } catch (JSONException e) {
-                                logError("Failed to load update", e, true);
-                            }
-                        }
+                    retweeted = tweet.isRetweeted();
 
-                        @Override
-                        public void onFailure(int statusCode, Header[] headers, Throwable throwable,JSONObject errorResponse) {
-                            throwable.printStackTrace();
-                        }
-                    });
+                    if (retweeted == false) {
+                        client.reTweet(id, new JsonHttpResponseHandler() {
+                            @Override
+                            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                super.onSuccess(statusCode, headers, response);
+                                try {
+                                    Tweet tweet = Tweet.fromJSON(response);
+                                    mTweets.add(tweet);
+                                    notifyDataSetChanged();
+                                    tvRetweetCount.setText(tweet.getRetweet_count() + "");
+                                    retweeted = tweet.isRetweeted();
+                                } catch (JSONException e) {
+                                    logError("Failed to load update", e, true);
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                                throwable.printStackTrace();
+                            }
+                        });
+                    }
+                    else {
+                        client.unReTweet(id, new JsonHttpResponseHandler() {
+                            @Override
+                            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                super.onSuccess(statusCode, headers, response);
+                                try {
+                                    Tweet tweet = Tweet.fromJSON(response);
+                                    tvRetweetCount.setText(tweet.getRetweet_count() + "");
+                                    retweeted = tweet.isRetweeted();
+                                    //System.out.println("successfully unretweeted");
+                                } catch (JSONException e) {
+                                    logError("Failed to load update", e, true);
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                                throwable.printStackTrace();
+                            }
+                        });
+                    }
                 }
 
                 // FAVORITE
@@ -183,23 +215,54 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                     }
                     Tweet tweet = mTweets.get(position);
                     long id = tweet.uid;
-                    client.favoriteTweet(id, new JsonHttpResponseHandler() {
-                        @Override
-                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                            super.onSuccess(statusCode, headers, response);
-                            try {
-                                Tweet tweet = Tweet.fromJSON(response);
-                                // TODO: Change image color
-                            } catch (JSONException e) {
-                                logError("Failed to load update", e, true);
+                    favorited = tweet.isFavorited();
+                    if (favorited == false) {
+                        client.favoriteTweet(id, new JsonHttpResponseHandler() {
+                            @Override
+                            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                super.onSuccess(statusCode, headers, response);
+                                try {
+                                    Tweet tweet = Tweet.fromJSON(response);
+                                    tvFavCount.setText(tweet.getFavorite_count() + "");
+                                    favorited = tweet.isFavorited();
+                                    // TODO: Change image color
+                                    // ibHeart.setImageResource(R.drawable.heart);
+                                } catch (JSONException e) {
+                                    logError("Failed to load update", e, true);
+                                }
                             }
-                        }
 
-                        @Override
-                        public void onFailure(int statusCode, Header[] headers, Throwable throwable,JSONObject errorResponse) {
-                            throwable.printStackTrace();
-                        }
-                    });
+
+                            @Override
+                            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                                throwable.printStackTrace();
+                            }
+                        });
+                    }
+
+                    else {
+                        client.unFavorite(id, new JsonHttpResponseHandler() {
+                            @Override
+                            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                super.onSuccess(statusCode, headers, response);
+                                try {
+                                    Tweet tweet = Tweet.fromJSON(response);
+                                    tvFavCount.setText(tweet.getFavorite_count() + "");
+                                    // TODO: Change image color
+                                    favorited = tweet.isFavorited();
+//                                 ibHeart.setImageResource(R.drawable.heart);
+                                } catch (JSONException e) {
+                                    logError("Failed to load update", e, true);
+                                }
+                            }
+
+
+                            @Override
+                            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                                throwable.printStackTrace();
+                            }
+                        });
+                    }
                 }
                 else {
                     // get the movie at the position, this won't work if the class is static
@@ -226,10 +289,6 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
     public void addAll(List<Tweet> list) {
         mTweets.addAll(list);
         notifyDataSetChanged();
-    }
-
-    public interface Callbacks {
-        void reTweet();
     }
 
     // handle errors, log and alert user

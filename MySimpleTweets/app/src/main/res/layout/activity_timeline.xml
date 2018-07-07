@@ -17,6 +17,13 @@
         app:layout_constraintTop_toTopOf="parent" />
 
 
+    <TextView
+        android:id="@+id/custom_font"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:autoLink="all"
+        android:linksClickable="true"
+        />
 
 
 </android.support.v4.widget.SwipeRefreshLayout>

@@ -8,12 +8,15 @@
 
     <TextView
         android:id="@+id/tvComment"
-        android:layout_width="46dp"
+        android:layout_width="27dp"
         android:layout_height="32dp"
+        android:layout_alignLeft="@id/ibComment"
+        android:layout_alignTop="@+id/ibRetweet"
         android:layout_below="@+id/ivProfileImage"
-        android:layout_marginLeft="5dp"
+        android:layout_marginEnd="21dp"
+        android:layout_marginLeft="35dp"
         android:layout_toStartOf="@+id/ibRetweet"
-        android:text="TextView" />
+        android:text="23" />
 
     <ImageView
         android:id="@+id/ivProfileImage"
@@ -64,8 +67,7 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_alignTop="@+id/tvComment"
-        android:layout_marginLeft="5dp"
-        android:layout_toStartOf="@+id/tvLikes"
+        android:layout_toEndOf="@+id/tvRetweets"
         android:background="@android:color/white"
         android:scaleType="fitCenter"
         app:srcCompat="@drawable/heart" />
@@ -75,7 +77,7 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_alignEnd="@+id/tvUserName"
-        android:layout_below="@+id/ivProfileImage"
+        android:layout_below="@+id/tvBody"
         android:layout_marginLeft="5dp"
         android:background="@android:color/white"
         android:scaleType="fitCenter"
@@ -85,11 +87,9 @@
         android:id="@+id/tvLikes"
         android:layout_width="wrap_content"
         android:layout_height="30dp"
-        android:layout_alignParentEnd="true"
         android:layout_alignTop="@+id/tvComment"
-        android:layout_marginEnd="110dp"
-        android:layout_marginLeft="5dp"
-        android:text="TextView" />
+        android:layout_toEndOf="@+id/tvID"
+        android:text="92" />
 
     <ImageButton
         android:id="@+id/ibComment"
@@ -97,6 +97,7 @@
         android:layout_height="30dp"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/ivProfileImage"
+        android:layout_alignTop="@+id/ibRetweet"
         android:background="@android:color/white"
         android:scaleType="fitCenter"
         app:srcCompat="@drawable/comment" />
@@ -109,6 +110,6 @@
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:layout_toEndOf="@+id/tvUserName"
-        android:text="TextView" />
+        android:text="58" />
 
 </RelativeLayout>
